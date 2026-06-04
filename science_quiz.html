@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>🚀 Science Vocabulary · Neon Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(ellipse at 30% 20%, #010005, #000000);
+            font-family: 'Segoe UI', 'Inter', 'Poppins', sans-serif;
+            min-height: 100vh;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .star {
+            position: fixed;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: starTwinkle 5s infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes starTwinkle {
+            0% { opacity: 0.1; transform: scale(0.6); box-shadow: 0 0 1px #fff; }
+            100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px #ffec9e, 0 0 8px #ffb347; }
+        }
+        .planet {
+            position: fixed;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            pointer-events: none;
+            z-index: 0;
+            filter: drop-shadow(0 0 15px cyan);
+            animation: floatPlanet 20s infinite alternate ease-in-out;
+        }
+        .earth { top: 5%; left: -2%; }
+        .moon { bottom: 2%; right: -1%; filter: drop-shadow(0 0 20px #ff69b4); }
+        .mars { top: 80%; left: 88%; filter: drop-shadow(0 0 15px #ff4500); }
+        @keyframes floatPlanet {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(20px, -15px) rotate(5deg); }
+        }
+        .rocket {
+            position: fixed;
+            bottom: 0%;
+            left: -5%;
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            pointer-events: none;
+            animation: flyRocket 14s infinite linear;
+            z-index: 0;
+            filter: drop-shadow(0 0 12px #ffaa00);
+        }
+        @keyframes flyRocket {
+            0% { transform: translateX(-80px) translateY(0) rotate(-3deg); }
+            100% { transform: translateX(110vw) translateY(-150px) rotate(8deg); }
+        }
+        .quiz-wrapper {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(5, 3, 15, 0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 2rem;
+            padding: 1.2rem;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+            z-index: 10;
+        }
+        h1 {
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
+            background: linear-gradient(135deg, #44ffaa, #ff66cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px #44ffaa;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .total-badge {
+            background: rgba(0, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: clamp(0.7rem, 3vw, 0.9rem);
+            color: #ccffcc;
+            border: 1px solid cyan;
+            text-shadow: 0 0 6px cyan;
+        }
+        .quote-box {
+            background: rgba(0, 20, 30, 0.6);
+            border-radius: 1.5rem;
+            padding: 0.6rem 1rem;
+            margin: 0.8rem 0;
+            text-align: center;
+            border-left: 6px solid #ff44cc;
+            font-style: italic;
+            color: #ffdd99;
+            text-shadow: 0 0 6px #ffaa44;
+            font-size: clamp(0.8rem, 3.5vw, 1rem);
+        }
+        .rules {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 1.2rem;
+            padding: 0.5rem 0.8rem;
+            margin-bottom: 0.8rem;
+            font-size: clamp(0.7rem, 3vw, 0.85rem);
+            color: #aaffdd;
+            border: 1px solid #44ffaa;
+        }
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        .stat {
+            background: rgba(0, 20, 40, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: clamp(0.7rem, 3vw, 0.85rem);
+            font-weight: bold;
+            border: 1px solid #44aaff;
+            color: #bbffff;
+            text-shadow: 0 0 5px #44aaff;
+        }
+        .progress-area {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            background: #1a1a3a;
+            height: 1rem;
+            border-radius: 2rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #44ffaa, #ff44cc);
+            transition: width 0.3s;
+            box-shadow: 0 0 6px #44ffaa;
+        }
+        .progress-text {
+            background: #00000066;
+            padding: 0.1rem 0.6rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: clamp(0.7rem, 3vw, 0.85rem);
+            color: #ffdd77;
+        }
+        .question-card {
+            background: rgba(20, 5, 35, 0.8);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin: 0.8rem 0;
+            border: 2px solid #ff44cc;
+            box-shadow: 0 0 15px rgba(255, 68, 204, 0.3);
+        }
+        .question-text {
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 0.8rem;
+            border-radius: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            text-shadow: 0 0 8px cyan;
+            word-break: break-word;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+        .option {
+            background: rgba(26, 26, 62, 0.7);
+            border: 1px solid #66ffcc;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #e6fffa;
+            font-weight: 500;
+            font-size: clamp(0.8rem, 3.5vw, 1rem);
+            word-break: break-word;
+        }
+        .option.selected {
+            background: rgba(68, 255, 204, 0.3);
+            border-color: #ff44cc;
+            box-shadow: 0 0 8px #ff44cc;
+        }
+        .feedback {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 1.5rem;
+            padding: 0.6rem;
+            margin: 0.8rem 0;
+            text-align: center;
+            border-left: 6px solid #ffaa44;
+            color: #ffffcc;
+            text-shadow: 0 0 6px #ffaa44;
+            font-size: clamp(0.8rem, 3.5vw, 1rem);
+        }
+        .button-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 0.6rem;
+        }
+        .btn {
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(95deg, #3a2a7a, #6a4acf);
+            color: white;
+            transition: 0.1s;
+            box-shadow: 0 0 10px #aa66ff;
+            font-size: clamp(0.8rem, 3.5vw, 1rem);
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, #44ffaa, #aa44ff);
+            box-shadow: 0 0 15px #44ffaa;
+        }
+        .restart-btn {
+            background: linear-gradient(95deg, #22aaff, #2266cc);
+        }
+        .hidden {
+            display: none;
+        }
+        .review-section {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid cyan;
+        }
+        .mistake-item {
+            background: #1a173d;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 8px solid #ff8866;
+            color: #ffddcc;
+            font-size: clamp(0.75rem, 3vw, 0.9rem);
+            word-break: break-word;
+        }
+        footer {
+            text-align: center;
+            font-size: clamp(0.65rem, 3vw, 0.75rem);
+            margin-top: 1rem;
+            color: #99ccff;
+            text-shadow: 0 0 6px #2266aa;
+        }
+        @media (max-width: 600px) {
+            .quiz-wrapper { padding: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="planet earth">🌍</div>
+    <div class="planet moon">🌙</div>
+    <div class="planet mars">🪐</div>
+    <div class="rocket">🚀</div>
+    <script>
+        for (let i = 0; i < 150; i++) {
+            let star = document.createElement('div');
+            star.classList.add('star');
+            let sz = Math.random() * 3 + 1;
+            star.style.width = sz + 'px';
+            star.style.height = sz + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 8 + 's';
+            star.style.animationDuration = 3 + Math.random() * 5 + 's';
+            document.body.appendChild(star);
+        }
+    </script>
+    <div class="quiz-wrapper" id="app">
+        <div class="top-bar">
+            <h1>🔬 Science Vocabulary · General Science</h1>
+            <span class="total-badge" id="totalSpan">📘 всего: 0</span>
+        </div>
+        <div class="quote-box" id="quoteBox">✨ Знание – это свет, который горит в душе. Удачи! ✨</div>
+        <div class="rules">
+            🚀 Правила: Выбери вариант, нажми Enter для проверки, ещё раз Enter – следующий вопрос. В любой момент можно нажать «Перезапустить тест».
+        </div>
+        <div id="startScreen" style="text-align:center; padding:1.5rem 0;">
+            <button class="btn btn-primary" id="startBtn" style="font-size:clamp(1.2rem, 5vw, 1.8rem); padding:0.6rem 1.5rem;">🌙 СТАРТ ТЕСТА 🚀</button>
+        </div>
+        <div id="quizInterface" class="hidden">
+            <div class="stats-grid">
+                <div class="stat">✅ Верно: <span id="correctCount">0</span></div>
+                <div class="stat">❌ Ошибки: <span id="mistakeCount">0</span></div>
+                <div class="stat">🎯 Точность: <span id="accuracyPercent">0</span>%</div>
+                <div class="stat">📝 Отвечено: <span id="answeredCount">0</span></div>
+                <div class="stat">🌙 Осталось: <span id="remainingCount">0</span></div>
+            </div>
+            <div class="progress-area">
+                <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text" id="progressFraction">0/0</div>
+            </div>
+            <div class="question-card">
+                <div class="question-text" id="questionDisplay"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="feedback" id="feedbackArea">✨ Выбери ответ и нажми «Проверить» ✨</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" id="checkBtn">✅ Проверить (Enter)</button>
+                    <button class="btn" id="nextBtn">➡ Следующий (Enter)</button>
+                </div>
+            </div>
+            <button class="btn restart-btn" id="restartBtn">🔄 Перезапустить тест</button>
+            <div id="reviewBlock" class="review-section hidden">
+                <h3 style="color:#ff99cc; font-size:clamp(1rem, 4vw, 1.2rem);">📖 Разбор ошибок</h3>
+                <div id="mistakeList"></div>
+                <button class="btn restart-btn" id="restartReviewBtn" style="margin-top:0.8rem;">🔄 Пройти заново</button>
+            </div>
+        </div>
+        <footer>✨ неоновая магия знаний · Science Vocabulary ✨</footer>
+    </div>
+    <script>
+        // ---------- VOCABULARY DATA (definition → term) ----------
+        const rawData = [
+            { definition: "the scientific study of the chemical processes and substances that occur in living organisms", term: "biochemistry" },
+            { definition: "relating to the chemical processes within living organisms", term: "biochemical" },
+            { definition: "a scientist who studies biochemistry", term: "biochemist" },
+            { definition: "the use of living organisms or biological systems to develop or make useful products, such as medicines or crops", term: "biotechnology" },
+            { definition: "a scientist who works in biotechnology", term: "biotechnologist" },
+            { definition: "the equipment, tools, or instruments needed for a particular scientific experiment or activity", term: "apparatus" },
+            { definition: "to measure or estimate the amount, level, or size of something", term: "gauge" },
+            { definition: "a device that produces a narrow, powerful beam of light that can be used for cutting, measuring, or medical procedures", term: "laser" },
+            { definition: "a shallow, flat, circular glass or plastic dish with a lid, used in laboratories to grow bacteria or other microorganisms", term: "Petri dish" },
+            { definition: "an optical instrument that makes distant objects appear larger and closer, used especially for observing stars and planets", term: "telescope" },
+            { definition: "a narrow glass tube with one end open and the other end closed, used in scientific experiments to hold or mix small amounts of substances", term: "test tube" },
+            { definition: "a space that contains no matter, or a space from which most of the air or gas has been removed", term: "vacuum" },
+            { definition: "to increase the speed or rate of a process or reaction", term: "accelerate" },
+            { definition: "the process of making something start working", term: "activation" },
+            { definition: "the chemical process of burning, during which a substance reacts with oxygen to produce heat and light", term: "combustion" },
+            { definition: "to change a gas or vapour into a liquid, usually by cooling", term: "condense" },
+            { definition: "the process of a gas turning into a liquid", term: "condensation" },
+            { definition: "to allow heat or electricity to flow through a material", term: "conduct" },
+            { definition: "the transfer of heat or electricity through a substance", term: "conduction" },
+            { definition: "capable of conducting heat or electricity", term: "conductive" },
+            { definition: "a measure of how well a material conducts heat or electricity", term: "conductivity" },
+            { definition: "a material that allows heat or electricity to pass through it easily", term: "conductor" },
+            { definition: "to make a substance or place impure or harmful by adding a poisonous or unwanted material", term: "contaminate" },
+            { definition: "made impure by contact with harmful substances", term: "contaminated" },
+            { definition: "the process or state of being made impure or harmful", term: "contamination" },
+            { definition: "a substance that makes something impure or unsafe", term: "contaminant" },
+            { definition: "to become smaller or shorter, often because of cooling or lack of moisture", term: "contract" },
+            { definition: "the process of becoming smaller or shorter", term: "contraction" },
+            { definition: "to remove water from a substance or food", term: "dehydrate" },
+            { definition: "having had the water removed", term: "dehydrated" },
+            { definition: "the process of losing or removing water", term: "dehydration" },
+            { definition: "to reduce the amount of something, especially a resource, by using it up", term: "deplete" },
+            { definition: "a serious reduction in the amount of something", term: "depletion" },
+            { definition: "to make a liquid weaker or less concentrated by adding water or another solvent", term: "dilute" },
+            { definition: "the process of making a liquid weaker, or the resulting weaker liquid", term: "dilution" },
+            { definition: "to spread or scatter particles, droplets, or organisms over a wide area", term: "disperse" },
+            { definition: "the act or process of spreading out", term: "dispersal" },
+            { definition: "to mix a solid substance completely into a liquid so that it becomes part of the liquid", term: "dissolve" },
+            { definition: "to change from a liquid into a gas, especially by heating", term: "evaporate" },
+            { definition: "the process of a liquid turning into a gas", term: "evaporation" },
+            { definition: "to use up a resource or supply completely", term: "exhaust" },
+            { definition: "to remove or obtain a substance from something, often using a chemical or mechanical process", term: "extract" },
+            { definition: "the process of removing or obtaining a substance", term: "extraction" },
+            { definition: "to pass a liquid or gas through a porous material to remove solid particles", term: "filter" },
+            { definition: "to control and use a natural force or energy to produce power or achieve a purpose", term: "harness" },
+            { definition: "to produce a substance by combining simpler chemical materials through a chemical reaction", term: "synthesize" },
+            { definition: "made by chemical synthesis, not naturally produced", term: "synthetic" },
+            { definition: "in a way that involves chemical synthesis", term: "synthetically" },
+            { definition: "to produce a natural, chemical, or industrial product", term: "yield" },
+            { definition: "a part or substance that makes up something, such as a chemical compound", term: "constituent" },
+            { definition: "scattered pieces of waste, rubbish, or broken material", term: "debris" },
+            { definition: "having a lot of mass in a small volume; thick or closely packed", term: "dense" },
+            { definition: "the degree to which something is dense, measured as mass per unit of volume", term: "density" },
+            { definition: "a thin, thread-like structure or substance, often forming a natural or synthetic material", term: "fibre" },
+            { definition: "allowing liquids or gases to pass through a material", term: "permeable" },
+            { definition: "having many small holes that allow liquid or air to pass through slowly", term: "porous" },
+            { definition: "emitting energy in the form of rays or particles because the atomic nucleus is unstable", term: "radioactive" },
+            { definition: "energy emitted as rays, waves, or particles, especially from a radioactive source", term: "radiation" },
+            { definition: "(of materials) in its natural, unprocessed state, not yet refined or manufactured", term: "raw" },
+            { definition: "main or basic, used regularly because it is important", term: "staple" },
+            { definition: "the variety of plant and animal life in a particular habitat or on Earth as a whole", term: "biodiversity" },
+            { definition: "a community of living organisms together with the physical environment in which they interact", term: "ecosystem" },
+            { definition: "a natural fuel such as coal, oil, or gas, formed from the remains of ancient plants and animals", term: "fossil fuel" },
+            { definition: "a method of disposing of waste by burying it in the ground, or the site where this is done", term: "landfill" },
+            { definition: "waste material, rubbish, or trash", term: "refuse" },
+            { definition: "(of a natural place) not damaged or changed by humans; in its original condition", term: "unspoiled" },
+            { definition: "a substance that causes a chemical reaction or change in another substance", term: "agent" },
+            { definition: "the smallest unit of a chemical element, consisting of a nucleus and electrons", term: "atom" },
+            { definition: "relating to atoms", term: "atomic" },
+            { definition: "a chemical process in which a change in one molecule causes a series of similar changes in many other molecules", term: "chain reaction" },
+            { definition: "a substance made of two or more different chemical elements bonded together", term: "compound" },
+            { definition: "a solid substance whose atoms or molecules are arranged in a regular, repeating pattern", term: "crystal" },
+            { definition: "unable to be dissolved in a particular liquid, especially water", term: "insoluble" },
+            { definition: "a group of two or more atoms bonded together, representing the smallest unit of a chemical compound", term: "molecule" },
+            { definition: "relating to molecules", term: "molecular" },
+            { definition: "a chart that arranges all known chemical elements by their atomic number and properties", term: "periodic table" }
+        ];
+        const total = rawData.length;
+        document.getElementById("totalSpan").innerText = `📘 всего: ${total}`;
+        document.getElementById("remainingCount").innerText = total;
+        // Helper functions
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        // For each question, we need a set of 4 options: correct term + 3 random distinct other terms
+        function buildQuestion(q) {
+            let otherTerms = rawData.filter(item => item.term !== q.term).map(item => item.term);
+            let distinctOther = [...new Set(otherTerms)];
+            let shuffledOthers = shuffleArray([...distinctOther]);
+            let options = [q.term, ...shuffledOthers.slice(0, 3)];
+            options = shuffleArray(options);
+            return { definition: q.definition, options: options, correct: q.term };
+        }
+        let questions = [];
+        let userAnswers = new Array(total).fill(null);
+        let currentIndex = 0;
+        let quizActive = false;
+        // DOM elements
+        const startScreenDiv = document.getElementById("startScreen");
+        const quizInterfaceDiv = document.getElementById("quizInterface");
+        const startBtn = document.getElementById("startBtn");
+        const questionDisplay = document.getElementById("questionDisplay");
+        const optionsContainer = document.getElementById("optionsContainer");
+        const feedbackArea = document.getElementById("feedbackArea");
+        const checkBtn = document.getElementById("checkBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const restartBtn = document.getElementById("restartBtn");
+        const restartReviewBtn = document.getElementById("restartReviewBtn");
+        const reviewBlock = document.getElementById("reviewBlock");
+        const mistakeListDiv = document.getElementById("mistakeList");
+        const correctSpan = document.getElementById("correctCount");
+        const mistakeSpan = document.getElementById("mistakeCount");
+        const accuracySpan = document.getElementById("accuracyPercent");
+        const answeredSpan = document.getElementById("answeredCount");
+        const remainingSpan = document.getElementById("remainingCount");
+        const progressFill = document.getElementById("progressFill");
+        const progressFraction = document.getElementById("progressFraction");
+        let quoteInterval = null;
+        const quotes = [
+            "✨ Знание – это свет, который горит в душе.",
+            "📖 Каждый правильный ответ приближает тебя к мечте.",
+            "🌙 Неоновая магия поможет сдать экзамен на отлично!",
+            "💪 Ты справишься, ты умница!",
+            "🎓 Учись ярко, живи смело.",
+            "🚀 Наука – это увлекательно!",
+            "✨ Ошибки – это ступени к знаниям."
+        ];
+        function updateQuote() {
+            const idx = Math.floor(Math.random() * quotes.length);
+            const qb = document.getElementById("quoteBox");
+            if (qb) qb.innerHTML = `✨ ${quotes[idx]} ✨`;
+        }
+        function startQuotes() { if (quoteInterval) clearInterval(quoteInterval); updateQuote(); quoteInterval = setInterval(updateQuote, 12000); }
+        function stopQuotes() { if (quoteInterval) clearInterval(quoteInterval); }
+        function computeStats() {
+            let correct = 0, wrong = 0, answered = 0;
+            for (let i = 0; i < total; i++) {
+                if (userAnswers[i] !== null) {
+                    answered++;
+                    if (userAnswers[i].isCorrect) correct++;
+                    else wrong++;
+                }
+            }
+            const acc = answered === 0 ? 0 : Math.round((correct / answered) * 100);
+            correctSpan.innerText = correct;
+            mistakeSpan.innerText = wrong;
+            accuracySpan.innerText = acc;
+            answeredSpan.innerText = answered;
+            remainingSpan.innerText = total - answered;
+            const percent = (answered / total) * 100;
+            progressFill.style.width = percent + "%";
+            progressFraction.innerText = `${answered}/${total}`;
+        }
+        function renderCurrentQuestion() {
+            if (!quizActive) return;
+            const q = questions[currentIndex];
+            questionDisplay.innerText = q.definition;
+            optionsContainer.innerHTML = "";
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement("div");
+                div.className = "option";
+                div.innerHTML = `<span style="font-weight:bold; margin-right:12px;">${letters[idx]}.</span> ${opt}`;
+                div.onclick = () => {
+                    if (userAnswers[currentIndex] !== null) {
+                        feedbackArea.innerHTML = "⚠️ Вы уже ответили на этот вопрос.";
+                        return;
+                    }
+                    document.querySelectorAll(".option").forEach(el => el.classList.remove("selected"));
+                    div.classList.add("selected");
+                    window._tempSelectedOption = opt;
+                };
+                optionsContainer.appendChild(div);
+            });
+            if (userAnswers[currentIndex] !== null) {
+                const saved = userAnswers[currentIndex];
+                document.querySelectorAll(".option").forEach(el => {
+                    el.style.pointerEvents = "none";
+                    if (el.innerText.includes(saved.selected)) el.classList.add("selected");
+                });
+                feedbackArea.innerHTML = saved.isCorrect ? `✅ Верно: ${saved.selected}` : `❌ Неверно. Правильно: ${questions[currentIndex].correct}`;
+                checkBtn.disabled = true;
+            } else {
+                document.querySelectorAll(".option").forEach(el => el.style.pointerEvents = "auto");
+                feedbackArea.innerHTML = "✨ Выбери ответ → «Проверить»";
+                checkBtn.disabled = false;
+            }
+            computeStats();
+        }
+        function checkAnswer() {
+            if (!quizActive) return;
+            if (userAnswers[currentIndex] !== null) { feedbackArea.innerHTML = "Уже отвечено"; return; }
+            const selected = window._tempSelectedOption;
+            if (!selected) { feedbackArea.innerHTML = "⚠️ Выбери вариант!"; return; }
+            const currentQ = questions[currentIndex];
+            const isCorrect = (selected === currentQ.correct);
+            userAnswers[currentIndex] = { selected, isCorrect };
+            renderCurrentQuestion();
+            computeStats();
+        }
+        function nextQuestion() {
+            if (!quizActive) return;
+            if (userAnswers[currentIndex] === null) { feedbackArea.innerHTML = "⚠️ Сначала ответь на вопрос."; return; }
+            if (currentIndex + 1 < total) {
+                currentIndex++;
+                window._tempSelectedOption = null;
+                renderCurrentQuestion();
+            } else {
+                feedbackArea.innerHTML = "🎉 Тест пройден! Смотри ошибки ниже.";
+                reviewBlock.classList.remove("hidden");
+                let mistakesHtml = "";
+                for (let i=0; i<total; i++) {
+                    if (userAnswers[i] !== null && !userAnswers[i].isCorrect) {
+                        mistakesHtml += `<div class="mistake-item"><strong>❓ Вопрос ${i+1}:</strong> ${questions[i].definition}<br>👉 Ваш ответ: ${userAnswers[i].selected}<br>✅ Правильный: ${questions[i].correct}</div>`;
+                    } else if (userAnswers[i] === null) {
+                        mistakesHtml += `<div class="mistake-item"><strong>❓ Вопрос ${i+1}:</strong> ${questions[i].definition}<br>👉 Не отвечен<br>✅ Правильный: ${questions[i].correct}</div>`;
+                    }
+                }
+                if (mistakesHtml === "") mistakesHtml = "<p>✨ Идеально! Нет ошибок ✨</p>";
+                mistakeListDiv.innerHTML = mistakesHtml;
+            }
+        }
+        function restartQuiz() {
+            let shuffledRaw = shuffleArray([...rawData]);
+            questions = shuffledRaw.map(item => buildQuestion(item));
+            userAnswers.fill(null);
+            currentIndex = 0;
+            window._tempSelectedOption = null;
+            reviewBlock.classList.add("hidden");
+            renderCurrentQuestion();
+            computeStats();
+        }
+        function startQuiz() {
+            startScreenDiv.classList.add("hidden");
+            quizInterfaceDiv.classList.remove("hidden");
+            quizActive = true;
+            startQuotes();
+            restartQuiz();
+        }
+        startBtn.addEventListener("click", startQuiz);
+        checkBtn.addEventListener("click", checkAnswer);
+        nextBtn.addEventListener("click", nextQuestion);
+        restartBtn.addEventListener("click", restartQuiz);
+        restartReviewBtn.addEventListener("click", () => { restartQuiz(); reviewBlock.classList.add("hidden"); });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                if (!quizActive && !startScreenDiv.classList.contains("hidden")) startQuiz();
+                else if (quizActive && !quizInterfaceDiv.classList.contains("hidden")) {
+                    if (userAnswers[currentIndex] === null) checkAnswer();
+                    else nextQuestion();
+                }
+            }
+        });
+        window.addEventListener("beforeunload", () => stopQuotes());
+    </script>
+</body>
+</html>
